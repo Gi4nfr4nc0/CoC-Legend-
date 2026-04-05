@@ -200,13 +200,15 @@ const playerTagInput = document.getElementById("playerTagInput");
 const dateFilter = document.getElementById("dateFilter");
 const typeFilter = document.getElementById("typeFilter");
 
-// Funzione per pulire il tag (togliere # e spazi)
+// Funzione per preparare il tag per l'URL: mantiene il # ma lo codifica come %23
 function cleanTag(tag) {
   let cleaned = tag.trim();
-  if (cleaned.startsWith("#")) {
-    cleaned = cleaned.substring(1);
+  // Se non inizia con #, lo aggiungiamo (perché l'API vuole il cancelletto)
+  if (!cleaned.startsWith("#")) {
+    cleaned = "#" + cleaned;
   }
-  return cleaned;
+  // Codifichiamo l'URL in modo che # diventi %23
+  return encodeURIComponent(cleaned);
 }
 
 // Mostra caricamento
