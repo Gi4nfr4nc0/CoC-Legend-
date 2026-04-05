@@ -4,190 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clash Logs Viewer - Legends API</title>
-
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
-
-.profile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1e293b;
-  padding: 14px 15px;
-  min-height: 70px;
-  border-radius: 15px;
-  margin-bottom: 20px;
-}
-
-.profile h2 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.profile p {
-  margin: 2px 0 0;
-  font-size: 15px;
-  opacity: 0.7;
-}
-
-.trophies {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-select, input, button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: #1e293b;
-  color: white;
-  font-size: 14px;
-}
-
-input {
-  flex: 2;
-  min-width: 150px;
-}
-
-button {
-  background: #3b82f6;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #2563eb;
-}
-
-.card {
-  background: #1e293b;
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
+body { margin: 0; font-family: Arial, sans-serif; background: #0f172a; color: #e2e8f0; }
+.container { max-width: 900px; margin: auto; padding: 20px; }
+.profile { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 14px 15px; min-height: 70px; border-radius: 15px; margin-bottom: 20px; }
+.profile h2 { margin: 0; font-size: 22px; }
+.profile p { margin: 2px 0 0; font-size: 15px; opacity: 0.7; }
+.trophies { font-size: 20px; font-weight: bold; }
+.controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+select, input, button { padding: 10px; border-radius: 10px; border: none; background: #1e293b; color: white; font-size: 14px; }
+input { flex: 2; min-width: 150px; }
+button { background: #3b82f6; cursor: pointer; transition: 0.2s; }
+button:hover { background: #2563eb; }
+.card { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 .attack { border-left: 5px solid #22c55e; }
 .defense { border-left: 5px solid #ef4444; }
-
-.big-win {
-  box-shadow: 0 0 10px rgba(34,197,94,0.6);
-}
-
-.stats {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.stat {
-  flex: 1;
-  background: #1e293b;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-}
-
+.big-win { box-shadow: 0 0 10px rgba(34,197,94,0.6); }
+.stats { display: flex; gap: 10px; margin-bottom: 20px; }
+.stat { flex: 1; background: #1e293b; padding: 10px; border-radius: 10px; text-align: center; }
 .pos { color: #22c55e; }
 .neg { color: #ef4444; }
-
-.day-title {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-bottom: 5px;
-}
-
-.loader {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #94a3b8;
-}
-
-.error {
-  background: #7f1d1d;
-  color: #fecaca;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #94a3b8;
-}
-
-.hidden {
-  display: none;
-}
+.day-title { font-size: 14px; opacity: 0.7; margin-bottom: 5px; }
+.loader { text-align: center; padding: 40px; font-size: 18px; color: #94a3b8; }
+.error { background: #7f1d1d; color: #fecaca; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+.empty { text-align: center; padding: 40px; color: #94a3b8; }
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <div class="profile">
-  <div>
-    <h2 id="playerName">—</h2>
-    <p id="playerTag">—</p>
-  </div>
+  <div><h2 id="playerName">—</h2><p id="playerTag">—</p></div>
   <div class="trophies">🏆 <span id="playerTrophies">—</span></div>
 </div>
-
 <div class="controls">
-  <input type="text" id="playerTagInput" placeholder="Inserisci tag giocatore (es. 8PLQ98R)" value="8PLQ98R">
+  <input type="text" id="playerTagInput" placeholder="Es. #8PLQ98R o 8PLQ98R" value="#8PLQ98R">
   <button id="loadBtn">🔍 Carica</button>
-  <select id="dateFilter">
-    <option value="today">Oggi</option>
-    <option value="month">Mese</option>
-  </select>
-  <select id="typeFilter">
-    <option value="all">Tutti</option>
-    <option value="attack">Attacchi</option>
-    <option value="defense">Difese</option>
-  </select>
+  <select id="dateFilter"><option value="today">Oggi</option><option value="month">Mese</option></select>
+  <select id="typeFilter"><option value="all">Tutti</option><option value="attack">Attacchi</option><option value="defense">Difese</option></select>
 </div>
-
 <div class="stats">
   <div class="stat">Attacchi: <span id="attackCount">0</span></div>
   <div class="stat">Difese: <span id="defenseCount">0</span></div>
   <div class="stat">Trofei: <span id="trophyDiff">0</span></div>
 </div>
-
-<div id="logsContainer">
-  <div class="empty">Inserisci un tag e premi "Carica"</div>
-</div>
-
+<div id="logsContainer"><div class="empty">Inserisci tag e premi Carica</div></div>
 </div>
 
 <script>
-// Variabile globale per i dati del giocatore
 let currentData = null;
-
-// Elementi DOM
 const playerNameEl = document.getElementById("playerName");
 const playerTagEl = document.getElementById("playerTag");
 const playerTrophiesEl = document.getElementById("playerTrophies");
@@ -200,257 +64,146 @@ const playerTagInput = document.getElementById("playerTagInput");
 const dateFilter = document.getElementById("dateFilter");
 const typeFilter = document.getElementById("typeFilter");
 
-// Funzione per preparare il tag per l'URL: mantiene il # ma lo codifica come %23
 function cleanTag(tag) {
   let cleaned = tag.trim();
-  // Se non inizia con #, lo aggiungiamo (perché l'API vuole il cancelletto)
-  if (!cleaned.startsWith("#")) {
-    cleaned = "#" + cleaned;
-  }
-  // Codifichiamo l'URL in modo che # diventi %23
+  if (!cleaned.startsWith("#")) cleaned = "#" + cleaned;
   return encodeURIComponent(cleaned);
 }
 
-// Mostra caricamento
 function showLoading() {
-  logsContainer.innerHTML = '<div class="loader">⏳ Caricamento in corso...</div>';
-  // Resetta statistiche
-  attackCountSpan.innerText = "0";
-  defenseCountSpan.innerText = "0";
-  trophyDiffSpan.innerText = "0";
+  logsContainer.innerHTML = '<div class="loader">⏳ Caricamento...</div>';
+  attackCountSpan.innerText = "0"; defenseCountSpan.innerText = "0"; trophyDiffSpan.innerText = "0";
 }
-
-// Mostra errore
 function showError(message) {
   logsContainer.innerHTML = `<div class="error">❌ ${message}</div>`;
-  playerNameEl.innerText = "—";
-  playerTagEl.innerText = "—";
-  playerTrophiesEl.innerText = "—";
-  attackCountSpan.innerText = "0";
-  defenseCountSpan.innerText = "0";
-  trophyDiffSpan.innerText = "0";
+  playerNameEl.innerText = "—"; playerTagEl.innerText = "—"; playerTrophiesEl.innerText = "—";
+  attackCountSpan.innerText = "0"; defenseCountSpan.innerText = "0"; trophyDiffSpan.innerText = "0";
   currentData = null;
 }
 
-// Funzione per ottenere il giorno "Clash Day" (inizia alle 6:00)
 function getClashDay(ts) {
   const d = new Date(ts);
   if (d.getHours() < 6) d.setDate(d.getDate() - 1);
-  d.setHours(0, 0, 0, 0);
+  d.setHours(0,0,0,0);
   return d;
 }
-
-// Controlla se un timestamp è oggi (secondo clash day)
 function isToday(ts) {
   return getClashDay(ts).getTime() === getClashDay(Date.now()).getTime();
 }
 
-// Renderizza i log basati sui filtri correnti
 function render() {
   if (!currentData || !currentData.logs) {
-    logsContainer.innerHTML = '<div class="empty">Nessun dato disponibile. Carica un tag valido.</div>';
+    logsContainer.innerHTML = '<div class="empty">Nessun dato. Carica un tag.</div>';
     return;
   }
-
   const dateFilterValue = dateFilter.value;
   const typeFilterValue = typeFilter.value;
-
   let logs = [...currentData.logs];
-  const container = logsContainer;
-  container.innerHTML = "";
-
-  let attackCount = 0;
-  let defenseCount = 0;
-  let trophyDiff = 0;
+  logsContainer.innerHTML = "";
+  let attackCount = 0, defenseCount = 0, trophyDiff = 0;
 
   if (dateFilterValue === "today") {
-    // Filtra solo log di oggi
     logs = logs.filter(l => isToday(l.timestamp));
-
-    if (typeFilterValue !== "all") {
-      logs = logs.filter(l => l.type === typeFilterValue);
-    }
-
-    // Ordine cronologico inverso (più recenti prima)
-    logs.sort((a, b) => b.timestamp - a.timestamp).forEach(log => {
+    if (typeFilterValue !== "all") logs = logs.filter(l => l.type === typeFilterValue);
+    logs.sort((a,b)=>b.timestamp-a.timestamp).forEach(log => {
       if (log.type === "attack") attackCount++;
       if (log.type === "defense") defenseCount++;
       trophyDiff += log.diff || 0;
-
       const icon = log.type === "attack" ? "⚔️" : "🛡️";
-      const diffClass = (log.diff || 0) >= 0 ? "pos" : "neg";
-      const typeClass = log.type;
-      const bigWin = (log.diff || 0) >= 100 ? "big-win" : "";
-
+      const diffClass = (log.diff||0) >= 0 ? "pos" : "neg";
+      const bigWin = (log.diff||0) >= 100 ? "big-win" : "";
       const div = document.createElement("div");
-      div.className = `card ${typeClass} ${bigWin}`;
-      div.innerHTML = `
-        <div>
-          ${icon} <strong>${log.type === "attack" ? "ATTACCO" : "DIFESA"}</strong><br>
-          ${new Date(log.timestamp).toLocaleString('it-IT')}
-        </div>
-        <div>
-          ${log.start || ''} → ${log.end || ''}<br>
-          <strong class="${diffClass}">
-            ${(log.diff || 0) > 0 ? "+" : ""}${log.diff || 0}
-          </strong>
-        </div>
-      `;
-      container.appendChild(div);
+      div.className = `card ${log.type} ${bigWin}`;
+      div.innerHTML = `<div>${icon} <strong>${log.type === "attack" ? "ATTACCO" : "DIFESA"}</strong><br>${new Date(log.timestamp).toLocaleString('it-IT')}</div>
+        <div>${log.start||''} → ${log.end||''}<br><strong class="${diffClass}">${(log.diff||0)>0?"+":""}${log.diff||0}</strong></div>`;
+      logsContainer.appendChild(div);
     });
-
-    if (logs.length === 0) {
-      container.innerHTML = '<div class="empty">Nessuna battaglia oggi.</div>';
-    }
-  } 
-  else { // Modalità "mese": raggruppa per giorno (clash day)
-    if (typeFilterValue !== "all") {
-      logs = logs.filter(l => l.type === typeFilterValue);
-    }
-
-    // Ordine cronologico ascendente per raggruppare correttamente
-    logs.sort((a, b) => a.timestamp - b.timestamp);
-
-    let currentDay = null;
-    let dayLogs = [];
-    let dayIndex = 1;
-
+    if (logs.length === 0) logsContainer.innerHTML = '<div class="empty">Nessuna battaglia oggi.</div>';
+  } else {
+    if (typeFilterValue !== "all") logs = logs.filter(l => l.type === typeFilterValue);
+    logs.sort((a,b)=>a.timestamp-b.timestamp);
+    let currentDay = null, dayLogs = [], dayIndex = 1;
     logs.forEach(log => {
       const day = getClashDay(log.timestamp);
       if (!currentDay || day.getTime() !== currentDay.getTime()) {
-        if (dayLogs.length > 0) {
-          renderDay(dayIndex, dayLogs);
-          dayIndex++;
-        }
+        if (dayLogs.length > 0) renderDay(dayIndex, dayLogs);
+        dayIndex++;
         currentDay = day;
         dayLogs = [];
       }
       dayLogs.push(log);
     });
-    if (dayLogs.length > 0) {
-      renderDay(dayIndex, dayLogs);
-    }
-
-    if (logs.length === 0) {
-      container.innerHTML = '<div class="empty">Nessuna battaglia nell\'ultimo mese.</div>';
-    }
-
+    if (dayLogs.length > 0) renderDay(dayIndex, dayLogs);
+    if (logs.length === 0) logsContainer.innerHTML = '<div class="empty">Nessuna battaglia nel mese.</div>';
     function renderDay(index, dayLogs) {
-      let atk = 0;
-      let def = 0;
-
-      dayLogs.forEach(l => {
-        const diff = l.diff || 0;
-        if (l.type === "attack") {
-          atk += diff;
-          attackCount++;
-        }
-        if (l.type === "defense") {
-          def += diff;
-          defenseCount++;
-        }
-        trophyDiff += diff;
-      });
-
-      const total = atk + def;
-      const init = dayLogs[0].start || '';
-      const final = dayLogs[dayLogs.length - 1].end || '';
-      const diffClass = total >= 0 ? "pos" : "neg";
-
+      let atk=0, def=0;
+      dayLogs.forEach(l => { const diff = l.diff||0; if(l.type==="attack") atk+=diff; else def+=diff; trophyDiff+=diff; attackCount+= (l.type==="attack"?1:0); defenseCount+= (l.type==="defense"?1:0); });
+      const total = atk+def;
+      const init = dayLogs[0].start||'', final = dayLogs[dayLogs.length-1].end||'';
       const div = document.createElement("div");
-      div.innerHTML = `
-        <div class="day-title">Giornata ${index}</div>
-        <div class="card">
-          <div>
-            ⚔️ <strong>${atk > 0 ? "+" : ""}${atk}</strong>
-            &nbsp;&nbsp;
-            🛡️ <strong>${def}</strong>
-          </div>
-          <div>
-            ${init} → ${final}<br>
-            <strong class="${diffClass}">
-              ${total > 0 ? "+" : ""}${total}
-            </strong>
-          </div>
-        </div>
-      `;
-      container.appendChild(div);
+      div.innerHTML = `<div class="day-title">Giornata ${index}</div><div class="card"><div>⚔️ <strong>${atk>0?"+":""}${atk}</strong> &nbsp;&nbsp; 🛡️ <strong>${def}</strong></div><div>${init} → ${final}<br><strong class="${total>=0?"pos":"neg"}">${total>0?"+":""}${total}</strong></div></div>`;
+      logsContainer.appendChild(div);
     }
   }
-
-  // Aggiorna statistiche
   attackCountSpan.innerText = attackCount;
   defenseCountSpan.innerText = defenseCount;
   trophyDiffSpan.innerText = trophyDiff;
 }
 
-// Carica i dati dall'API
 async function loadPlayerData() {
-  let rawTag = playerTagInput.value;
-  const tag = cleanTag(rawTag);
-  
-  if (!tag) {
-    showError("Inserisci un tag valido (es. 8PLQ98R)");
-    return;
-  }
+  const rawTag = playerTagInput.value;
+  const tagEncoded = cleanTag(rawTag);
+  if (!tagEncoded) { showError("Tag non valido"); return; }
 
   showLoading();
 
+  // Usa un proxy CORS pubblico (corsproxy.io) per evitare blocchi
+  const targetUrl = `https://legends-api.clashperk.com/${tagEncoded}`;
+  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+  
+  // Prova prima con proxy, se fallisce prova diretto (per debug)
+  let response;
+  let errorMsg = "";
   try {
-    const apiUrl = `https://legends-api.clashperk.com/${tag}`;
-    const response = await fetch(apiUrl);
-    
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error("Giocatore non trovato. Verifica il tag.");
-      } else {
-        throw new Error(`Errore API (${response.status})`);
-      }
-    }
-    
+    console.log("Tentativo con proxy:", proxyUrl);
+    response = await fetch(proxyUrl);
+    if (!response.ok) throw new Error(`Proxy risponde con status ${response.status}`);
     const data = await response.json();
-    
-    // Verifica che i dati abbiano la struttura attesa
-    if (!data || !data.logs) {
-      throw new Error("Dati ricevuti non validi.");
-    }
-    
-    // Salva i dati globalmente
+    if (!data || !data.logs) throw new Error("Formato dati non valido");
     currentData = data;
-    
-    // Aggiorna il profilo
     playerNameEl.innerText = data.name || "Sconosciuto";
-    playerTagEl.innerText = data.tag || tag;
+    playerTagEl.innerText = data.tag || rawTag;
     playerTrophiesEl.innerText = data.trophies ?? "—";
-    
-    // Applica i filtri e renderizza
     render();
-    
-  } catch (error) {
-    console.error("Errore fetch:", error);
-    showError(error.message);
+    return;
+  } catch (e) {
+    console.warn("Proxy fallito:", e);
+    errorMsg = e.message;
+  }
+
+  // Fallback: chiamata diretta (potrebbe fallire per CORS, ma almeno vediamo l'errore)
+  try {
+    console.log("Tentativo diretto:", targetUrl);
+    response = await fetch(targetUrl);
+    if (!response.ok) throw new Error(`API risponde con status ${response.status}`);
+    const data = await response.json();
+    if (!data || !data.logs) throw new Error("Formato dati non valido");
+    currentData = data;
+    playerNameEl.innerText = data.name || "Sconosciuto";
+    playerTagEl.innerText = data.tag || rawTag;
+    playerTrophiesEl.innerText = data.trophies ?? "—";
+    render();
+  } catch (e) {
+    console.error("Entrambi i tentativi falliti:", e);
+    showError(`Errore: ${e.message}. Verifica console.`);
   }
 }
 
-// Event listeners
 loadBtn.addEventListener("click", loadPlayerData);
-dateFilter.addEventListener("change", () => { if (currentData) render(); });
-typeFilter.addEventListener("change", () => { if (currentData) render(); });
-
-// Opzionale: premi Invio nell'input per caricare
-playerTagInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") loadPlayerData();
-});
-
-// Carica automaticamente un tag di esempio all'avvio (opzionale)
-// Per comodità, carichiamo il tag di esempio 8PLQ98R al primo avvio
-window.addEventListener("load", () => {
-  // Imposta un tag di esempio già presente nell'input
-  if (playerTagInput.value === "8PLQ98R") {
-    loadPlayerData();
-  }
-});
+dateFilter.addEventListener("change", () => currentData && render());
+typeFilter.addEventListener("change", () => currentData && render());
+playerTagInput.addEventListener("keypress", (e) => e.key === "Enter" && loadPlayerData());
+window.addEventListener("load", () => loadPlayerData()); // carica il tag di default
 </script>
-
 </body>
 </html>
