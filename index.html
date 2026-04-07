@@ -2,56 +2,340 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>Clash Logs Viewer - Legends API</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clash of Clans Legend Tracker</title>
+
 <style>
-body { margin: 0; font-family: Arial, sans-serif; background: #0f172a; color: #e2e8f0; }
-.container { max-width: 900px; margin: auto; padding: 20px; }
-.profile { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 14px 15px; min-height: 70px; border-radius: 15px; margin-bottom: 20px; }
-.profile h2 { margin: 0; font-size: 22px; }
-.profile p { margin: 2px 0 0; font-size: 15px; opacity: 0.7; }
-.trophies { font-size: 20px; font-weight: bold; }
-.controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-select, input, button { padding: 10px; border-radius: 10px; border: none; background: #1e293b; color: white; font-size: 14px; }
-input { flex: 2; min-width: 150px; }
-button { background: #3b82f6; cursor: pointer; transition: 0.2s; }
-button:hover { background: #2563eb; }
-.card { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 14px 15px;
+  min-height: 70px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.profile h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.profile p {
+  margin: 2px 0 0;
+  font-size: 15px;
+  opacity: 0.7;
+}
+
+.trophies {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+select {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #1e293b;
+  color: white;
+}
+
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .attack { border-left: 5px solid #22c55e; }
 .defense { border-left: 5px solid #ef4444; }
-.big-win { box-shadow: 0 0 10px rgba(34,197,94,0.6); }
-.stats { display: flex; gap: 10px; margin-bottom: 20px; }
-.stat { flex: 1; background: #1e293b; padding: 10px; border-radius: 10px; text-align: center; }
+
+.big-win {
+  box-shadow: 0 0 10px rgba(34,197,94,0.6);
+}
+
+.big-loss {
+  box-shadow: 0 0 10px rgba(239,68,68,0.6);
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  flex: 1;
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .pos { color: #22c55e; }
 .neg { color: #ef4444; }
-.day-title { font-size: 14px; opacity: 0.7; margin-bottom: 5px; }
-.footer {  position: fixed;  bottom: 0;  left: 0;  width: 100%;  text-align: center;  padding: 10px;  background: #0f172a;  font-size: 13px;  opacity: 0.7;}
-.loader { text-align: center; padding: 40px; font-size: 18px; color: #94a3b8; }
-.error { background: #7f1d1d; color: #fecaca; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-.empty { text-align: center; padding: 40px; color: #94a3b8; }
+
+.day-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.footer {
+  text-align: center;
+  padding: 15px 10px;
+  background: #0f172a;
+  font-size: 13px;
+  opacity: 0.8;
+  border-top: 1px solid #334155;
+  margin-top: 20px;
+}
+
+sup {
+  font-size: 0.7rem;
+  padding: 0px 4px;
+  border-radius: 12px;
+  margin-left: 0px;
+  font-weight: normal;
+  color: #94a3b8;
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="container">
+
 <div class="profile">
-  <div><h2 id="playerName">—</h2><p id="playerTag">—</p></div>
-  <div class="trophies">🏆 <span id="playerTrophies">—</span></div>
+  <div>
+    <h2 id="playerName"></h2>
+    <p id="playerTag"></p>
+  </div>
+  <div class="trophies">🏆 <span id="playerTrophies"></span></div>
 </div>
+
 <div class="controls">
-  <input type="text" id="playerTagInput" placeholder="Scrivi il tuo tag Es. #8PLQ98R" value="">
-  <button id="loadBtn">🔍 Carica</button>
-  <select id="dateFilter"><option value="today">Oggi</option><option value="month">Mese</option></select>
-  <select id="typeFilter"><option value="all">Tutti</option><option value="attack">Attacchi</option><option value="defense">Difese</option></select>
+  <select id="dateFilter">
+    <option value="today">Oggi</option>
+    <option value="month">Mese</option>
+  </select>
+
+  <select id="typeFilter">
+    <option value="all">Tutti</option>
+    <option value="attack">Attacchi</option>
+    <option value="defense">Difese</option>
+  </select>
 </div>
+
 <div class="stats">
   <div class="stat">Attacchi: <span id="attackCount">0</span></div>
   <div class="stat">Difese: <span id="defenseCount">0</span></div>
   <div class="stat">Trofei: <span id="trophyDiff">0</span></div>
 </div>
-<div id="logsContainer"><div class="empty">Inserisci tag e premi Carica</div></div>
-<div class="footer">Creato da <strong>ᴹᴬᴰᴄʜɪᴇꜰ_ɢɪᴀɴ⌂</strong>
+
+<div id="logsContainer"></div>
+
 </div>
-</div>
+
+<script>
+
+const data = json;
+
+document.getElementById("playerName").innerText = data.name;
+document.getElementById("playerTag").innerText = data.tag;
+document.getElementById("playerTrophies").innerText = data.trophies;
+
+function getClashDay(ts) {
+  const d = new Date(ts);
+  if (d.getHours() < 7) d.setDate(d.getDate() - 1);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function isToday(ts) {
+  return getClashDay(ts).getTime() === getClashDay(Date.now()).getTime();
+}
+
+function render() {
+
+  const dateFilter = document.getElementById("dateFilter").value;
+  const typeFilter = document.getElementById("typeFilter").value;
+
+  let logs = data.logs || [];
+
+  const container = document.getElementById("logsContainer");
+  container.innerHTML = "";
+
+  let attackCount = 0;
+  let defenseCount = 0;
+  let trophyDiff = 0;
+
+  if (dateFilter === "today") {
+
+    logs = logs.filter(l => isToday(l.timestamp));
+
+    if (typeFilter !== "all") {
+      logs = logs.filter(l => l.type === typeFilter);
+    }
+
+    logs.sort((a,b)=>b.timestamp-a.timestamp).forEach(log => {
+
+      if (log.type === "attack") attackCount++;
+      if (log.type === "defense") defenseCount++;
+      trophyDiff += log.diff || 0;
+
+      const icon = log.type === "attack" ? "⚔️" : "🛡️";
+      const diffClass = (log.diff || 0) >= 0 ? "pos" : "neg";
+      const typeClass = log.type;
+      const bigWin = (log.diff || 0) >= 100 ? "big-win" : "";
+      const bigLoss = (log.diff || 0) <= -100 ? "big-loss" : "";
+
+      const div = document.createElement("div");
+      div.className = `card ${typeClass} ${bigWin} ${bigLoss}`;
+
+      div.innerHTML = `
+        <div class="row">
+          <div>
+            ${icon} <strong>${log.type === "attack" ? "ATTACCO" : "DIFESA"}</strong><br>
+            ${new Date(log.timestamp).toLocaleString('it-IT')}
+          </div>
+          <div>
+            ${log.start || ''} → ${log.end || ''}<br>
+            <strong class="${diffClass}">
+              ${(log.diff||0)>0?"+":""}${log.diff||0}
+            </strong>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(div);
+    });
+
+  } else {
+
+    if (typeFilter !== "all") {
+      logs = logs.filter(l => l.type === typeFilter);
+    }
+
+    logs.sort((a, b) => a.timestamp - b.timestamp);
+
+    let currentDay = null;
+    let dayLogs = [];
+    let dayIndex = 1;
+
+    logs.forEach(log => {
+      const day = getClashDay(log.timestamp);
+
+      if (!currentDay || day.getTime() !== currentDay.getTime()) {
+        if (dayLogs.length > 0) {
+          renderDay(dayIndex, dayLogs);
+          dayIndex++;
+        }
+        currentDay = day;
+        dayLogs = [];
+      }
+      dayLogs.push(log);
+    });
+
+    if (dayLogs.length > 0) {
+      renderDay(dayIndex, dayLogs);
+    }
+
+    function renderDay(index, dayLogs) {
+      let atk = 0;
+      let def = 0;
+      let DayAttackCount = 0;
+      let DayDefenseCount = 0;
+
+      dayLogs.forEach(l => {
+        const diff = l.diff || 0;
+        if (l.type === "attack") {
+          atk += diff;
+          DayAttackCount++;
+        }
+        if (l.type === "defense") {
+          def += diff;
+          DayDefenseCount++;
+        }
+        trophyDiff += diff;
+      });
+
+      const total = atk + def;
+      const init = dayLogs[0].start || '';
+      const final = dayLogs[dayLogs.length - 1].end || '';
+      const diffClass = total >= 0 ? "pos" : "neg";
+
+      const typeClass = total >= 0 ? "attack" : "defense";
+      const bigWin = total >= 100 ? "big-win" : "";
+      const bigLoss = total <= -100 ? "big-loss" : "";
+
+      const div = document.createElement("div");
+      div.className = `card ${typeClass} ${bigWin} ${bigLoss}`;
+
+      div.innerHTML = `
+        <div class="row">
+          <div>
+            <strong>Giornata ${index}</strong><br>
+            ⚔️ <strong>${atk > 0 ? "+" : ""}${atk}</strong><sup>${DayAttackCount}</sup>
+            &nbsp;&nbsp;
+            🛡️ <strong>${def}</strong><sup>${DayDefenseCount}</sup>
+          </div>
+          <div>
+            ${init} → ${final}<br>
+            <strong class="${diffClass}">
+              ${total > 0 ? "+" : ""}${total}
+            </strong>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(div);
+    }
+  }
+
+  document.getElementById("attackCount").innerText = attackCount;
+  document.getElementById("defenseCount").innerText = defenseCount;
+  document.getElementById("trophyDiff").innerText = trophyDiff;
+}
+
+document.getElementById("dateFilter").addEventListener("change", render);
+document.getElementById("typeFilter").addEventListener("change", render);
+
+render();
+
+
+</script>
+
+<div class="footer">Da un idea di:  <strong>ᴹᴬᴰᴄʜɪᴇꜰ_ɢɪᴀɴ⌂</strong></div>
+
+</body>
+</html>
 
 <script>
 let currentData = null;
